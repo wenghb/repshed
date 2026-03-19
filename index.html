@@ -100,6 +100,33 @@
                     </div>
                 </div>
 
+                <!-- Speed Trainer -->
+                <div class="trainer-toggle-row">
+                    <button class="btn btn-sm btn-outline" id="btn-trainer-toggle" onclick="toggleTrainer()">🏋️ Speed Trainer</button>
+                </div>
+                <div class="trainer-panel hidden" id="trainer-panel">
+                    <div class="trainer-row">
+                        <label>Start</label>
+                        <input type="number" id="trainer-start" class="trainer-input" value="0.50" min="0.10" max="2.00" step="0.05">
+                        <span class="speed-x">×</span>
+                        <label>Target</label>
+                        <input type="number" id="trainer-target" class="trainer-input" value="1.00" min="0.10" max="2.00" step="0.05">
+                        <span class="speed-x">×</span>
+                    </div>
+                    <div class="trainer-row">
+                        <label>Step</label>
+                        <input type="number" id="trainer-step" class="trainer-input" value="0.05" min="0.01" max="0.50" step="0.01">
+                        <span class="speed-x">×</span>
+                        <label>Loops/step</label>
+                        <input type="number" id="trainer-loops" class="trainer-input" value="3" min="1" max="50" step="1">
+                    </div>
+                    <div class="trainer-actions">
+                        <button class="btn btn-sm" id="btn-trainer-start" onclick="startTrainer()">▶ Start Training</button>
+                        <button class="btn btn-sm btn-danger hidden" id="btn-trainer-stop" onclick="stopTrainer()">⏹ Stop</button>
+                    </div>
+                    <div class="trainer-status" id="trainer-status"></div>
+                </div>
+
                 <!-- Volume -->
                 <div class="volume-section">
                     <label class="speed-label">Volume</label>
@@ -147,6 +174,7 @@
                 <span><kbd>[</kbd> Set A</span>
                 <span><kbd>]</kbd> Set B</span>
                 <span><kbd>L</kbd> Toggle Loop</span>
+                <span><kbd>T</kbd> Speed Trainer</span>
                 <span><kbd>-</kbd><kbd>+</kbd> Speed ±0.01</span>
                 <span><kbd>Scroll</kbd> Pan waveform</span>
             </div>

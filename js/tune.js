@@ -23,6 +23,14 @@ const state = {
     // Scroll drag
     scrollDragging: false,
     scrollDragLastX: 0,
+    // Speed Trainer
+    trainerEnabled: false,
+    trainerStartSpeed: 0.5,
+    trainerTargetSpeed: 1.0,
+    trainerStep: 0.05,
+    trainerLoopsPerStep: 3,
+    trainerCurrentLoopCount: 0,
+    trainerReachedTarget: false,
 };
 
 const canvas = document.getElementById('waveform');
@@ -371,6 +379,25 @@ function checkLoop() {
     if (state.loopStart === null || state.loopEnd === null) return;
     if (state.audioElement.currentTime >= state.loopEnd) {
         state.audioElement.currentTime = state.loopStart;
+
+        // Speed Trainer: count loops and auto-increase speed
+        if (state.trainerEnabled && !state.trainerReachedTarget) {
+            state.trainerCurrentLoopCount++;
+            updateTrainerStatus();
+            if (state.trainerCurrentLoopCount >= state.trainerLoopsPerStep) {
+                state.trainerCurrentLoopCount = 0;
+                const newSpeed = Math.round((state.speed + state.trainerStep) * 100) / 100;
+                if (newSpeed >= state.trainerTargetSpeed) {
+                    setSpeed(state.trainerTargetSpeed);
+                    state.trainerReachedTarget = true;
+                    updateTrainerStatus();
+                    toast('🎯 Target speed reached!', 'success');
+                } else {
+                    setSpeed(newSpeed);
+                    updateTrainerStatus();
+                }
+            }
+        }
     }
 }
 
@@ -1096,6 +1123,10 @@ document.addEventListener('keydown', e => {
             e.preventDefault();
             if (state.loopStart !== null && state.loopEnd !== null) toggleLoop();
             break;
+        case 'KeyT':
+            e.preventDefault();
+            toggleTrainer();
+            break;
         case 'Minus':
         case 'NumpadSubtract':
             e.preventDefault();
@@ -1113,6 +1144,102 @@ document.addEventListener('keydown', e => {
 window.addEventListener('resize', () => {
     if (rawPeaks) drawWaveform();
 });
+
+// ── Speed Trainer ───────────────────────────────────────
+function toggleTrainer() {
+    const panel = document.getElementById('trainer-panel');
+    const btn = document.getElementById('btn-trainer-toggle');
+    if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btn.classList.add('active');
+    } else {
+        panel.classList.add('hidden');
+        btn.classList.remove('active');
+        if (state.trainerEnabled) stopTrainer();
+    }
+}
+
+function startTrainer() {
+    if (!state.loopEnabled || state.loopStart === null || state.loopEnd === null) {
+        toast('Set a loop region first', 'error');
+        return;
+    }
+
+    // Read values from inputs
+    state.trainerStartSpeed = parseFloat(document.getElementById('trainer-start').value) || 0.5;
+    state.trainerTargetSpeed = parseFloat(document.getElementById('trainer-target').value) || 1.0;
+    state.trainerStep = parseFloat(document.getElementById('trainer-step').value) || 0.05;
+    state.trainerLoopsPerStep = parseInt(document.getElementById('trainer-loops').value) || 3;
+
+    // Validate
+    if (state.trainerStartSpeed >= state.trainerTargetSpeed) {
+        toast('Start speed must be less than target speed', 'error');
+        return;
+    }
+    if (state.trainerStep <= 0) {
+        toast('Step must be positive', 'error');
+        return;
+    }
+
+    state.trainerEnabled = true;
+    state.trainerCurrentLoopCount = 0;
+    state.trainerReachedTarget = false;
+
+    // Set starting speed
+    setSpeed(state.trainerStartSpeed);
+
+    // Auto-play if not already
+    if (!state.playing) {
+        togglePlay();
+    }
+
+    updateTrainerUI();
+    updateTrainerStatus();
+    toast('🏋️ Speed trainer started!', 'success');
+}
+
+function stopTrainer() {
+    state.trainerEnabled = false;
+    state.trainerCurrentLoopCount = 0;
+    state.trainerReachedTarget = false;
+    updateTrainerUI();
+    updateTrainerStatus();
+}
+
+function updateTrainerUI() {
+    const startBtn = document.getElementById('btn-trainer-start');
+    const stopBtn = document.getElementById('btn-trainer-stop');
+    const inputs = document.querySelectorAll('#trainer-panel .trainer-input');
+
+    if (state.trainerEnabled) {
+        startBtn.classList.add('hidden');
+        stopBtn.classList.remove('hidden');
+        inputs.forEach(el => el.disabled = true);
+    } else {
+        startBtn.classList.remove('hidden');
+        stopBtn.classList.add('hidden');
+        inputs.forEach(el => el.disabled = false);
+    }
+}
+
+function updateTrainerStatus() {
+    const statusEl = document.getElementById('trainer-status');
+    if (!state.trainerEnabled) {
+        statusEl.textContent = '';
+        return;
+    }
+
+    if (state.trainerReachedTarget) {
+        statusEl.textContent = `🎯 Target reached! Playing at ${state.trainerTargetSpeed.toFixed(2)}×`;
+        statusEl.className = 'trainer-status reached';
+    } else {
+        const totalSteps = Math.ceil((state.trainerTargetSpeed - state.trainerStartSpeed) / state.trainerStep);
+        const currentStep = Math.floor((state.speed - state.trainerStartSpeed) / state.trainerStep) + 1;
+        const loopsLeft = state.trainerLoopsPerStep - state.trainerCurrentLoopCount;
+        statusEl.textContent = `Step ${currentStep}/${totalSteps} · ${state.speed.toFixed(2)}× · ${loopsLeft} loop${loopsLeft !== 1 ? 's' : ''} until next ↑`;
+        statusEl.className = 'trainer-status active';
+    }
+}
 
 // ── Helpers ─────────────────────────────────────────────
 function formatTime(s) {
