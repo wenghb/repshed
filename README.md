@@ -1,10 +1,10 @@
-# TuneCraft 🎵
+# RepShed 🎵
 
 **Master any song, one loop at a time.**
 
 Free online music practice tool — loop sections, slow down without pitch change, progressive speed training. Works with any instrument.
 
-🔗 **Live:** [tunecraft.app](https://tunecraft.app)
+🔗 **Live:** [repshed.com](https://repshed.com)
 
 ## Features
 
