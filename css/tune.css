@@ -32,6 +32,21 @@
     font-size: 0.75rem;
 }
 
+.footer-support {
+    margin-top: 6px;
+}
+
+.footer-support a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.footer-support a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
 /* Track info */
 .track-info {
     background: var(--surface);
