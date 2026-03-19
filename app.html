@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuneCraft — Music Practice Tool</title>
+    <meta name="description" content="Free online music practice tool. Loop any section, slow down without pitch change, progressive speed training. Perfect for guitar, piano, bass, drums — any instrument.">
+    <meta name="keywords" content="music practice, loop player, slow down music, A-B repeat, speed trainer, guitar practice, piano practice">
+    <meta property="og:title" content="TuneCraft — Music Practice Tool">
+    <meta property="og:description" content="Loop, slow down, and master any song. Free online music practice tool with progressive speed training.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tunecraft.app">
+    <link rel="canonical" href="https://tunecraft.app">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tune.css">
+</head>
+<body>
+    <div class="gp-container">
+        <div class="gp-header">
+            <div></div>
+            <h1>🎵 TuneCraft</h1>
+            <div class="header-tagline">Master any song, one loop at a time</div>
+        </div>
+
+        <!-- Upload Area -->
+        <div id="upload-area" class="upload-area">
+            <div class="icon">🎵</div>
+            <p><strong>Drop an audio file here</strong> or click to browse</p>
+            <p class="hint">MP3, WAV, OGG, M4A, FLAC — up to 100MB • All processing stays in your browser</p>
+            <input type="file" id="file-input" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac,.aac,.wma" style="display:none">
+        </div>
+
+        <!-- Player (hidden until file loaded) -->
+        <div id="player-section" class="hidden">
+            <!-- Track Info -->
+            <div class="track-info">
+                <span class="track-name" id="track-name"></span>
+                <span class="track-duration" id="track-duration"></span>
+                <button class="btn btn-sm btn-danger" onclick="closeTrack()">✕ Close</button>
+            </div>
+
+            <!-- Waveform -->
+            <div class="waveform-wrap">
+                <canvas id="waveform" height="90"></canvas>
+                <div class="time-labels">
+                    <span id="time-start">0:00</span>
+                    <span id="time-end">0:00</span>
+                </div>
+            </div>
+
+            <!-- Scrollbar / Seek bar -->
+            <div class="scroll-bar-wrap" id="scroll-bar-wrap">
+                <div class="scroll-track" id="scroll-track">
+                    <div class="scroll-thumb" id="scroll-thumb"></div>
+                </div>
+            </div>
+
+            <!-- View Window + Loop Info row -->
+            <div class="view-loop-row">
+                <div class="loop-info" id="loop-info">
+                    <span class="loop-badge" id="loop-badge">No loop selected</span>
+                    <span class="loop-hint">Click and drag on the waveform to select a loop region</span>
+                </div>
+                <div class="view-window-ctrl">
+                    <label>View</label>
+                    <input type="number" id="view-window-input" class="compact-input" value="30" min="2" max="600" title="Visible window in seconds">
+                    <span class="unit">s</span>
+                    <input type="range" id="view-window-slider" class="compact-slider" min="2" max="300" value="30" step="1">
+                </div>
+            </div>
+
+            <!-- Transport Controls -->
+            <div class="transport">
+                <div class="transport-row">
+                    <button class="ctrl-btn" id="btn-restart" onclick="restartTrack()" title="Restart">⏮</button>
+                    <button class="ctrl-btn" id="btn-back5" onclick="skip(-5)" title="Back 5s">−5s</button>
+                    <button class="ctrl-btn play-btn" id="btn-play" onclick="togglePlay()">▶</button>
+                    <button class="ctrl-btn" id="btn-fwd5" onclick="skip(5)" title="Forward 5s">+5s</button>
+                    <button class="ctrl-btn" id="btn-loop" onclick="toggleLoop()" title="Toggle loop">🔁</button>
+                </div>
+
+                <!-- Current Time -->
+                <div class="current-time" id="current-time">0:00.0</div>
+
+                <!-- Speed Control -->
+                <div class="speed-section">
+                    <label class="speed-label">Speed</label>
+                    <div class="speed-buttons">
+                        <button class="speed-btn" data-speed="0.25">0.25×</button>
+                        <button class="speed-btn" data-speed="0.5">0.5×</button>
+                        <button class="speed-btn" data-speed="0.75">0.75×</button>
+                        <button class="speed-btn active" data-speed="1">1×</button>
+                        <button class="speed-btn" data-speed="1.25">1.25×</button>
+                        <button class="speed-btn" data-speed="1.5">1.5×</button>
+                    </div>
+                    <div class="speed-fine-row">
+                        <input type="range" id="speed-slider" class="speed-slider" min="0.10" max="2.00" step="0.01" value="1.00">
+                        <input type="number" id="speed-input" class="speed-num-input" min="0.10" max="2.00" step="0.01" value="1.00">
+                        <span class="speed-x">×</span>
+                    </div>
+                </div>
+
+                <!-- Speed Trainer -->
+                <div class="trainer-toggle-row">
+                    <button class="btn btn-sm btn-outline" id="btn-trainer-toggle" onclick="toggleTrainer()">🏋️ Speed Trainer</button>
+                </div>
+                <div class="trainer-panel hidden" id="trainer-panel">
+                    <div class="trainer-row">
+                        <label>Start</label>
+                        <input type="number" id="trainer-start" class="trainer-input" value="0.50" min="0.10" max="2.00" step="0.05">
+                        <span class="speed-x">×</span>
+                        <label>Target</label>
+                        <input type="number" id="trainer-target" class="trainer-input" value="1.00" min="0.10" max="2.00" step="0.05">
+                        <span class="speed-x">×</span>
+                    </div>
+                    <div class="trainer-row">
+                        <label>Step</label>
+                        <input type="number" id="trainer-step" class="trainer-input" value="0.05" min="0.01" max="0.50" step="0.01">
+                        <span class="speed-x">×</span>
+                        <label>Loops/step</label>
+                        <input type="number" id="trainer-loops" class="trainer-input" value="3" min="1" max="50" step="1">
+                    </div>
+                    <div class="trainer-actions">
+                        <button class="btn btn-sm" id="btn-trainer-start" onclick="startTrainer()">▶ Start Training</button>
+                        <button class="btn btn-sm btn-danger hidden" id="btn-trainer-stop" onclick="stopTrainer()">⏹ Stop</button>
+                    </div>
+                    <div class="trainer-status" id="trainer-status"></div>
+                </div>
+
+                <!-- Volume -->
+                <div class="volume-section">
+                    <label class="speed-label">Volume</label>
+                    <div class="speed-slider-row">
+                        <span>🔈</span>
+                        <input type="range" id="volume-slider" class="speed-slider" min="0" max="1" step="0.05" value="1">
+                        <span>🔊</span>
+                    </div>
+                </div>
+
+                <!-- Loop Adjust -->
+                <div class="loop-adjust" id="loop-adjust">
+                    <div class="loop-point">
+                        <span class="loop-point-label">A</span>
+                        <button class="adj-btn" onclick="nudgeLoop('start', -1)" title="−1s">−1</button>
+                        <button class="adj-btn adj-fine" onclick="nudgeLoop('start', -0.1)" title="−0.1s">−.1</button>
+                        <input type="text" class="loop-time-input" id="loop-start-input" placeholder="0:00.0" onchange="setLoopTime('start', this.value)">
+                        <button class="adj-btn adj-fine" onclick="nudgeLoop('start', 0.1)" title="+0.1s">+.1</button>
+                        <button class="adj-btn" onclick="nudgeLoop('start', 1)" title="+1s">+1</button>
+                    </div>
+                    <div class="loop-point">
+                        <span class="loop-point-label">B</span>
+                        <button class="adj-btn" onclick="nudgeLoop('end', -1)" title="−1s">−1</button>
+                        <button class="adj-btn adj-fine" onclick="nudgeLoop('end', -0.1)" title="−0.1s">−.1</button>
+                        <input type="text" class="loop-time-input" id="loop-end-input" placeholder="0:00.0" onchange="setLoopTime('end', this.value)">
+                        <button class="adj-btn adj-fine" onclick="nudgeLoop('end', 0.1)" title="+0.1s">+.1</button>
+                        <button class="adj-btn" onclick="nudgeLoop('end', 1)" title="+1s">+1</button>
+                    </div>
+                </div>
+
+                <!-- Loop Actions -->
+                <div class="loop-actions">
+                    <button class="btn btn-sm btn-outline" onclick="setLoopFromHere()" title="Set loop start at current position">Set A (start)</button>
+                    <button class="btn btn-sm btn-outline" onclick="setLoopToHere()" title="Set loop end at current position">Set B (end)</button>
+                    <button class="btn btn-sm btn-outline" onclick="clearLoop()">Clear Loop</button>
+                    <button class="btn btn-sm" id="btn-countin" onclick="toggleCountIn()" title="Count-in beeps before loop restart">🔔 Count-in</button>
+                </div>
+            </div>
+
+            <!-- Keyboard Shortcuts -->
+            <div class="shortcuts">
+                <span><kbd>Space</kbd> Play/Pause</span>
+                <span><kbd>←</kbd><kbd>→</kbd> ±5s</span>
+                <span><kbd>Shift</kbd>+<kbd>←</kbd><kbd>→</kbd> ±1s</span>
+                <span><kbd>[</kbd> Set A</span>
+                <span><kbd>]</kbd> Set B</span>
+                <span><kbd>L</kbd> Toggle Loop</span>
+                <span><kbd>T</kbd> Speed Trainer</span>
+                <span><kbd>-</kbd><kbd>+</kbd> Speed ±0.01</span>
+                <span><kbd>Scroll</kbd> Pan waveform</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <p>TuneCraft — Free music practice tool. All audio processing happens in your browser. No ads, no tracking.
+            <br><a href="/privacy" style="color:#71717a;text-decoration:none;font-size:0.85rem;">Privacy</a> · <a href="/terms" style="color:#71717a;text-decoration:none;font-size:0.85rem;">Terms</a></p>
+            <p class="footer-support">
+                Love TuneCraft? <a href="https://ko-fi.com/tunecraft" target="_blank" rel="noopener">☕ Buy me a coffee</a> to keep it free & growing.
+            </p>
+        </footer>
+    </div>
+
+    <script src="js/tune.js"></script>
+
+    <!-- Floating Ko-fi donate button -->
+    <a href="https://ko-fi.com/tunecraft" target="_blank" rel="noopener" class="floating-donate" title="Support TuneCraft">
+        ☕ Support
+    </a>
+</body>
+</html>

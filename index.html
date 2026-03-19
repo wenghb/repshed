@@ -3,197 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TuneCraft — Music Practice Tool</title>
-    <meta name="description" content="Free online music practice tool. Loop any section, slow down without pitch change, progressive speed training. Perfect for guitar, piano, bass, drums — any instrument.">
-    <meta name="keywords" content="music practice, loop player, slow down music, A-B repeat, speed trainer, guitar practice, piano practice">
-    <meta property="og:title" content="TuneCraft — Music Practice Tool">
-    <meta property="og:description" content="Loop, slow down, and master any song. Free online music practice tool with progressive speed training.">
+    <title>TuneCraft — Free Music Practice Tool | Loop, Slow Down & Master Any Song</title>
+    <meta name="description" content="Free online music practice tool. Loop any section, slow down without changing pitch, and train with progressive speed. Works with guitar, piano, bass, drums — any instrument. No signup, no uploads, 100% in your browser.">
+    <meta name="keywords" content="music practice tool, loop player, slow down music, A-B repeat, speed trainer, guitar practice, piano practice, music loop online, slow down song without pitch change, free music practice">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="TuneCraft — Free Music Practice Tool">
+    <meta property="og:description" content="Loop, slow down, and master any song. Free online tool with A-B repeat, speed control, and progressive training. No signup required.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tunecraft.app">
+    <meta property="og:image" content="https://tunecraft.app/img/og-image.png">
+    <meta property="og:site_name" content="TuneCraft">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="TuneCraft — Free Music Practice Tool">
+    <meta name="twitter:description" content="Loop, slow down, and master any song. Free, private, no signup.">
+    <meta name="twitter:image" content="https://tunecraft.app/img/og-image.png">
+
     <link rel="canonical" href="https://tunecraft.app">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/tune.css">
+    <!-- Using system font stack for privacy (no external font requests) -->
+    <link rel="stylesheet" href="css/landing.css">
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "TuneCraft",
+        "url": "https://tunecraft.app",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "description": "Free online music practice tool. Loop any section, slow down without pitch change, progressive speed training.",
+        "featureList": [
+            "A-B Loop — repeat any section",
+            "Speed control from 0.1× to 2× without pitch change",
+            "Waveform visualization with scrollable viewport",
+            "Progressive speed trainer with auto tempo increase",
+            "Keyboard shortcuts for hands-free control",
+            "100% browser-based, no file uploads"
+        ],
+        "screenshot": "https://tunecraft.app/img/og-image.png"
+    }
+    </script>
+
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is TuneCraft really free?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, TuneCraft is 100% free with no signup required. All features are available immediately — no trials, no premium tiers, no ads."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does TuneCraft upload my music files?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. All audio processing happens entirely in your browser using the Web Audio API. Your files never leave your device. There are no servers, no uploads, no tracking."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What audio formats does TuneCraft support?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "TuneCraft supports MP3, WAV, OGG, M4A, FLAC, AAC, and WMA files up to 100MB."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I slow down music without changing the pitch?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes! TuneCraft uses the Web Audio API to change playback speed from 0.1× to 2× while preserving the original pitch. Perfect for learning fast passages note by note."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does TuneCraft work on mobile and tablet?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. TuneCraft is fully responsive and supports touch gestures on iPad, iPhone, Android phones and tablets."
+                }
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
-    <div class="gp-container">
-        <div class="gp-header">
-            <div></div>
-            <h1>🎵 TuneCraft</h1>
-            <div class="header-tagline">Master any song, one loop at a time</div>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">🎵 TuneCraft</a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#faq">FAQ</a>
+                <a href="/app" class="nav-cta">Open App →</a>
+            </div>
+            <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Menu">☰</button>
         </div>
+    </nav>
 
-        <!-- Upload Area -->
-        <div id="upload-area" class="upload-area">
-            <div class="icon">🎵</div>
-            <p><strong>Drop an audio file here</strong> or click to browse</p>
-            <p class="hint">MP3, WAV, OGG, M4A, FLAC — up to 100MB • All processing stays in your browser</p>
-            <input type="file" id="file-input" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac,.aac,.wma" style="display:none">
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-badge">100% Free · No Signup · No Uploads</div>
+            <h1>Master any song,<br><span class="gradient-text">one loop at a time.</span></h1>
+            <p class="hero-sub">The free music practice tool that lets you loop any section, slow down without changing pitch, and train at progressively faster speeds. Works with any instrument.</p>
+            <div class="hero-actions">
+                <a href="/app" class="btn-primary">Start Practicing — It's Free →</a>
+            </div>
+            <p class="hero-note">No account needed. Drop a file and go.</p>
         </div>
+    </section>
 
-        <!-- Player (hidden until file loaded) -->
-        <div id="player-section" class="hidden">
-            <!-- Track Info -->
-            <div class="track-info">
-                <span class="track-name" id="track-name"></span>
-                <span class="track-duration" id="track-duration"></span>
-                <button class="btn btn-sm btn-danger" onclick="closeTrack()">✕ Close</button>
+    <!-- Social Proof / Trust -->
+    <section class="trust">
+        <div class="trust-inner">
+            <div class="trust-item">
+                <span class="trust-icon">🔒</span>
+                <span>Privacy-first — files never leave your browser</span>
             </div>
-
-            <!-- Waveform -->
-            <div class="waveform-wrap">
-                <canvas id="waveform" height="90"></canvas>
-                <div class="time-labels">
-                    <span id="time-start">0:00</span>
-                    <span id="time-end">0:00</span>
-                </div>
+            <div class="trust-item">
+                <span class="trust-icon">⚡</span>
+                <span>Instant — no downloads or installation</span>
             </div>
-
-            <!-- Scrollbar / Seek bar -->
-            <div class="scroll-bar-wrap" id="scroll-bar-wrap">
-                <div class="scroll-track" id="scroll-track">
-                    <div class="scroll-thumb" id="scroll-thumb"></div>
-                </div>
-            </div>
-
-            <!-- View Window + Loop Info row -->
-            <div class="view-loop-row">
-                <div class="loop-info" id="loop-info">
-                    <span class="loop-badge" id="loop-badge">No loop selected</span>
-                    <span class="loop-hint">Click and drag on the waveform to select a loop region</span>
-                </div>
-                <div class="view-window-ctrl">
-                    <label>View</label>
-                    <input type="number" id="view-window-input" class="compact-input" value="30" min="2" max="600" title="Visible window in seconds">
-                    <span class="unit">s</span>
-                    <input type="range" id="view-window-slider" class="compact-slider" min="2" max="300" value="30" step="1">
-                </div>
-            </div>
-
-            <!-- Transport Controls -->
-            <div class="transport">
-                <div class="transport-row">
-                    <button class="ctrl-btn" id="btn-restart" onclick="restartTrack()" title="Restart">⏮</button>
-                    <button class="ctrl-btn" id="btn-back5" onclick="skip(-5)" title="Back 5s">−5s</button>
-                    <button class="ctrl-btn play-btn" id="btn-play" onclick="togglePlay()">▶</button>
-                    <button class="ctrl-btn" id="btn-fwd5" onclick="skip(5)" title="Forward 5s">+5s</button>
-                    <button class="ctrl-btn" id="btn-loop" onclick="toggleLoop()" title="Toggle loop">🔁</button>
-                </div>
-
-                <!-- Current Time -->
-                <div class="current-time" id="current-time">0:00.0</div>
-
-                <!-- Speed Control -->
-                <div class="speed-section">
-                    <label class="speed-label">Speed</label>
-                    <div class="speed-buttons">
-                        <button class="speed-btn" data-speed="0.25">0.25×</button>
-                        <button class="speed-btn" data-speed="0.5">0.5×</button>
-                        <button class="speed-btn" data-speed="0.75">0.75×</button>
-                        <button class="speed-btn active" data-speed="1">1×</button>
-                        <button class="speed-btn" data-speed="1.25">1.25×</button>
-                        <button class="speed-btn" data-speed="1.5">1.5×</button>
-                    </div>
-                    <div class="speed-fine-row">
-                        <input type="range" id="speed-slider" class="speed-slider" min="0.10" max="2.00" step="0.01" value="1.00">
-                        <input type="number" id="speed-input" class="speed-num-input" min="0.10" max="2.00" step="0.01" value="1.00">
-                        <span class="speed-x">×</span>
-                    </div>
-                </div>
-
-                <!-- Speed Trainer -->
-                <div class="trainer-toggle-row">
-                    <button class="btn btn-sm btn-outline" id="btn-trainer-toggle" onclick="toggleTrainer()">🏋️ Speed Trainer</button>
-                </div>
-                <div class="trainer-panel hidden" id="trainer-panel">
-                    <div class="trainer-row">
-                        <label>Start</label>
-                        <input type="number" id="trainer-start" class="trainer-input" value="0.50" min="0.10" max="2.00" step="0.05">
-                        <span class="speed-x">×</span>
-                        <label>Target</label>
-                        <input type="number" id="trainer-target" class="trainer-input" value="1.00" min="0.10" max="2.00" step="0.05">
-                        <span class="speed-x">×</span>
-                    </div>
-                    <div class="trainer-row">
-                        <label>Step</label>
-                        <input type="number" id="trainer-step" class="trainer-input" value="0.05" min="0.01" max="0.50" step="0.01">
-                        <span class="speed-x">×</span>
-                        <label>Loops/step</label>
-                        <input type="number" id="trainer-loops" class="trainer-input" value="3" min="1" max="50" step="1">
-                    </div>
-                    <div class="trainer-actions">
-                        <button class="btn btn-sm" id="btn-trainer-start" onclick="startTrainer()">▶ Start Training</button>
-                        <button class="btn btn-sm btn-danger hidden" id="btn-trainer-stop" onclick="stopTrainer()">⏹ Stop</button>
-                    </div>
-                    <div class="trainer-status" id="trainer-status"></div>
-                </div>
-
-                <!-- Volume -->
-                <div class="volume-section">
-                    <label class="speed-label">Volume</label>
-                    <div class="speed-slider-row">
-                        <span>🔈</span>
-                        <input type="range" id="volume-slider" class="speed-slider" min="0" max="1" step="0.05" value="1">
-                        <span>🔊</span>
-                    </div>
-                </div>
-
-                <!-- Loop Adjust -->
-                <div class="loop-adjust" id="loop-adjust">
-                    <div class="loop-point">
-                        <span class="loop-point-label">A</span>
-                        <button class="adj-btn" onclick="nudgeLoop('start', -1)" title="−1s">−1</button>
-                        <button class="adj-btn adj-fine" onclick="nudgeLoop('start', -0.1)" title="−0.1s">−.1</button>
-                        <input type="text" class="loop-time-input" id="loop-start-input" placeholder="0:00.0" onchange="setLoopTime('start', this.value)">
-                        <button class="adj-btn adj-fine" onclick="nudgeLoop('start', 0.1)" title="+0.1s">+.1</button>
-                        <button class="adj-btn" onclick="nudgeLoop('start', 1)" title="+1s">+1</button>
-                    </div>
-                    <div class="loop-point">
-                        <span class="loop-point-label">B</span>
-                        <button class="adj-btn" onclick="nudgeLoop('end', -1)" title="−1s">−1</button>
-                        <button class="adj-btn adj-fine" onclick="nudgeLoop('end', -0.1)" title="−0.1s">−.1</button>
-                        <input type="text" class="loop-time-input" id="loop-end-input" placeholder="0:00.0" onchange="setLoopTime('end', this.value)">
-                        <button class="adj-btn adj-fine" onclick="nudgeLoop('end', 0.1)" title="+0.1s">+.1</button>
-                        <button class="adj-btn" onclick="nudgeLoop('end', 1)" title="+1s">+1</button>
-                    </div>
-                </div>
-
-                <!-- Loop Actions -->
-                <div class="loop-actions">
-                    <button class="btn btn-sm btn-outline" onclick="setLoopFromHere()" title="Set loop start at current position">Set A (start)</button>
-                    <button class="btn btn-sm btn-outline" onclick="setLoopToHere()" title="Set loop end at current position">Set B (end)</button>
-                    <button class="btn btn-sm btn-outline" onclick="clearLoop()">Clear Loop</button>
-                    <button class="btn btn-sm" id="btn-countin" onclick="toggleCountIn()" title="Count-in beeps before loop restart">🔔 Count-in</button>
-                </div>
-            </div>
-
-            <!-- Keyboard Shortcuts -->
-            <div class="shortcuts">
-                <span><kbd>Space</kbd> Play/Pause</span>
-                <span><kbd>←</kbd><kbd>→</kbd> ±5s</span>
-                <span><kbd>Shift</kbd>+<kbd>←</kbd><kbd>→</kbd> ±1s</span>
-                <span><kbd>[</kbd> Set A</span>
-                <span><kbd>]</kbd> Set B</span>
-                <span><kbd>L</kbd> Toggle Loop</span>
-                <span><kbd>T</kbd> Speed Trainer</span>
-                <span><kbd>-</kbd><kbd>+</kbd> Speed ±0.01</span>
-                <span><kbd>Scroll</kbd> Pan waveform</span>
+            <div class="trust-item">
+                <span class="trust-icon">🎸</span>
+                <span>Works with guitar, piano, bass, drums, voice — anything</span>
             </div>
         </div>
+    </section>
 
-        <!-- Footer -->
-        <footer class="site-footer">
-            <p>TuneCraft — Free music practice tool. All audio processing happens in your browser. No ads, no tracking.</p>
-            <p class="footer-support">
-                Love TuneCraft? <a href="https://ko-fi.com/tunecraft" target="_blank" rel="noopener">☕ Buy me a coffee</a> to keep it free & growing.
-            </p>
-        </footer>
-    </div>
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-inner">
+            <h2 class="section-title">Everything you need to practice smarter</h2>
+            <p class="section-sub">No bloat. Just the tools that actually help you improve.</p>
 
-    <script src="js/tune.js"></script>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔁</div>
+                    <h3>A-B Loop</h3>
+                    <p>Click and drag on the waveform to select any section. It repeats seamlessly until you nail it. Fine-tune boundaries with ±0.1 second precision.</p>
+                </div>
 
-    <!-- Floating Ko-fi donate button -->
-    <a href="https://ko-fi.com/tunecraft" target="_blank" rel="noopener" class="floating-donate" title="Support TuneCraft">
-        ☕ Support
-    </a>
+                <div class="feature-card">
+                    <div class="feature-icon">🐌</div>
+                    <h3>Slow Down Without Pitch Change</h3>
+                    <p>Reduce speed from 0.1× to 2× while keeping the original pitch. Hear every note clearly, even in the fastest passages.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏋️</div>
+                    <h3>Progressive Speed Trainer</h3>
+                    <p>Set a start speed, target speed, and step size. TuneCraft automatically increases tempo after each set of loops — like interval training for musicians.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Waveform Visualization</h3>
+                    <p>See your entire track as a scrollable waveform with a minimap. Zoom in for precision, zoom out for overview. Navigate visually.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⌨️</div>
+                    <h3>Keyboard Shortcuts</h3>
+                    <p>Hands on your instrument, not your mouse. Space to play, brackets to set loop points, arrows to seek. Full control without leaving position.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>100% Private</h3>
+                    <p>All processing happens in your browser with the Web Audio API. No uploads, no servers, no accounts, no tracking. Your music stays yours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-inner">
+            <h2 class="section-title">Up and running in 10 seconds</h2>
+            <p class="section-sub">No signup. No installation. Just music practice.</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h3>Drop your audio file</h3>
+                    <p>Drag and drop or click to upload. Supports MP3, WAV, OGG, M4A, FLAC — up to 100MB. The file stays on your device.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h3>Select a section to loop</h3>
+                    <p>Click and drag on the waveform to highlight the part you want to practice. Adjust with fine controls or keyboard shortcuts.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h3>Slow down & master it</h3>
+                    <p>Set a comfortable speed, loop until you're solid, then bump it up. Use the Speed Trainer for automatic progressive practice.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="use-cases">
+        <div class="section-inner">
+            <h2 class="section-title">Built for every musician</h2>
+
+            <div class="cases-grid">
+                <div class="case-card">
+                    <div class="case-emoji">🎸</div>
+                    <h3>Guitar Players</h3>
+                    <p>Loop that solo, slow it to 50%, and learn it note by note. Speed Trainer gets you back to full tempo gradually.</p>
+                </div>
+                <div class="case-card">
+                    <div class="case-emoji">🎹</div>
+                    <h3>Piano & Keys</h3>
+                    <p>Isolate tricky passages in classical pieces or jazz solos. Fine-tune loop boundaries to exact beat positions.</p>
+                </div>
+                <div class="case-card">
+                    <div class="case-emoji">🥁</div>
+                    <h3>Drummers</h3>
+                    <p>Loop fills and breaks, slow them down to hear every ghost note. Practice along at comfortable speeds.</p>
+                </div>
+                <div class="case-card">
+                    <div class="case-emoji">🎤</div>
+                    <h3>Vocalists</h3>
+                    <p>Learn melodies phrase by phrase. Slow down fast vocal runs without changing key. Perfect for ear training.</p>
+                </div>
+                <div class="case-card">
+                    <div class="case-emoji">🎵</div>
+                    <h3>Music Teachers</h3>
+                    <p>Assign sections for students to practice. Share the link — no installs needed. Works on any device with a browser.</p>
+                </div>
+                <div class="case-card">
+                    <div class="case-emoji">🎧</div>
+                    <h3>Transcribers</h3>
+                    <p>Slow down audio to catch every note. Loop and relisten. Fine-tune boundaries with 0.1s precision for exact phrase isolation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="section-inner">
+            <h2>Ready to practice smarter?</h2>
+            <p>No signup. No download. Just open and play.</p>
+            <a href="/app" class="btn-primary btn-lg">Open TuneCraft — Free →</a>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="section-inner">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>Is TuneCraft really free?</summary>
+                    <p>Yes, 100% free. No trials, no premium tiers, no ads. All features are available right now, no account needed.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Does TuneCraft upload my music files?</summary>
+                    <p>No. All audio processing happens entirely in your browser using the Web Audio API. Your files never leave your device. There are no servers involved.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>What audio formats are supported?</summary>
+                    <p>MP3, WAV, OGG, M4A, FLAC, AAC, and WMA — up to 100MB. Basically anything your browser can decode.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Can I slow down music without changing the pitch?</summary>
+                    <p>Yes! Speed ranges from 0.1× to 2× with pitch preserved. Hear every note at a comfortable tempo, then work your way up.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Does it work on mobile and tablet?</summary>
+                    <p>Yes. TuneCraft is fully responsive and supports touch on iPad, iPhone, and Android devices. Keyboard shortcuts are available on desktop.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>What is the Speed Trainer?</summary>
+                    <p>It's like interval training for musicians. Set a start speed (e.g. 0.5×), a target (e.g. 1.0×), and a step (e.g. 0.05×). TuneCraft auto-increases the tempo after a set number of loops, building your speed gradually without overwhelming you.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>How precise are the loop boundaries?</summary>
+                    <p>You can adjust loop start and end points with ±0.1 second precision using the fine-tune controls. You can also type exact timestamps.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Do I need to create an account?</summary>
+                    <p>No. There's no account system. Just open the page and start practicing. Your audio never touches a server.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">🎵 TuneCraft</span>
+                <p>Free music practice tool. Loop, slow down, master.</p>
+            </div>
+            <div class="footer-links">
+                <a href="/app">Open App</a>
+                <a href="#features">Features</a>
+                <a href="#faq">FAQ</a>
+                <a href="/privacy">Privacy</a>
+                <a href="/terms">Terms</a>
+                <a href="https://ko-fi.com/tunecraft" target="_blank" rel="noopener">☕ Support</a>
+            </div>
+            <div class="footer-copy">
+                <p>© 2026 TuneCraft. Made with ♪ for musicians everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile nav toggle
+        const toggle = document.getElementById('nav-toggle');
+        const links = document.querySelector('.nav-links');
+        toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    links.classList.remove('open');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
