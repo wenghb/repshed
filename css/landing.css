@@ -29,6 +29,17 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+a { 
+    color: var(--accent-light);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
 /* ── Navigation ───────────────────────────────────────── */
 .nav {
     position: fixed;
